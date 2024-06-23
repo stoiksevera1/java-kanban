@@ -9,46 +9,46 @@ public class Main {
         Epic epic2 = new Epic("Еда", "Есть");
         Task task1 = new Task("Бег", "пробежать как можно дольше", Status.DONE);
         Task task2 = new Task("Приседания", "приседать как можно больше", Status.NEW);
-        Subtask subTask1 = new Subtask("долго спать", "проспать как можно дольше", Status.NEW);
-        Subtask subTask2 = new Subtask("очень долго спать", "спать в два раза дольше чем в первый раз", Status.DONE);
-        Subtask subtask3 = new Subtask("Много есть", "получить ачивку обжорство", Status.IN_PROGRESS);
+        Subtask subTask1 = new Subtask("долго спать", "проспать как можно дольше", Status.NEW, 1);
+        Subtask subTask2 = new Subtask("очень долго спать", "спать в два раза дольше чем в первый раз", Status.DONE, 1);
+        Subtask subtask3 = new Subtask("Много есть", "получить ачивку обжорство", Status.IN_PROGRESS, 2);
 
         taskManager.addTask(epic1);
         taskManager.addTask(epic2);
         taskManager.addTask(task1);
         taskManager.addTask(task2);
-        taskManager.addTask(1, subTask1);
-        taskManager.addTask(1, subTask2);
-        taskManager.addTask(2, subtask3);
+        taskManager.addTask(subTask1);
+        taskManager.addTask(subTask2);
+        taskManager.addTask(subtask3);
 
 
-        taskManager.getListTasks();
-        taskManager.getListEpics();
-        taskManager.getListSubTasks();
+        System.out.println(taskManager.getListTasks());
+        System.out.println(taskManager.getListEpics());
+        System.out.println(taskManager.getListSubTasks());
 
-        taskManager.getListEpic(epic1);
+        System.out.println(taskManager.getListEpic(1));
 
-        taskManager.getTaskById(3);
-        taskManager.getEpicById(2);
-        taskManager.getSubTaskById(5);
-        taskManager.getTaskById(5);
-        taskManager.getEpicById(3);
-        taskManager.getSubTaskById(2);
+        System.out.println(taskManager.getTaskById(3));
+        System.out.println(taskManager.getEpicById(2));
+        System.out.println(taskManager.getSubTaskById(5));
+        System.out.println(taskManager.getTaskById(5));
+        System.out.println(taskManager.getEpicById(3));
+        System.out.println(taskManager.getSubTaskById(2));
         System.out.println("КОНЕЦ");
 
-        Subtask subtask4 = new Subtask("Много есть", "получить ачивку обжорство", Status.DONE);
+        Subtask subtask4 = new Subtask("Много есть", "получить ачивку обжорство", Status.DONE, 2);
         subtask4.setId(subtask3.getId());
-        taskManager.update(2, subtask4);
-        Subtask subTask5 = new Subtask("долго спать", "проспать как можно дольше", Status.DONE);
+        taskManager.update(subtask4);
+        Subtask subTask5 = new Subtask("долго спать", "проспать как можно дольше", Status.DONE, 1);
         subTask5.setId(subTask1.getId());
-        taskManager.update(1, subTask5);
+        taskManager.update(subTask5);
 
         subTask5.setId(subTask1.getId());
-        taskManager.getListTasks();
+        System.out.println(taskManager.getListTasks());
         taskManager.getListEpics();
         taskManager.getListSubTasks();
 
-        taskManager.getListEpic(epic1);
+        taskManager.getListEpic(1);
         taskManager.delEpicById(1);
         System.out.println("КОНЕЦ");
     }
