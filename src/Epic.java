@@ -7,6 +7,7 @@ public class Epic extends Task {
     public Epic(String name, String description) {
         super(name, description, Status.NEW);
 
+
     }
 
     public void delSubId(int id){
@@ -22,6 +23,6 @@ public class Epic extends Task {
     }
 
     public ArrayList<Integer> getSubIds() {
-        return subIds = new ArrayList<>();
+        return new ArrayList<>(subIds);
     }
 }

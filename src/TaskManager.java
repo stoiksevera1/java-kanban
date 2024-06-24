@@ -3,9 +3,9 @@ import java.util.ArrayList;
 
 public class TaskManager {
     private int nextId = 1;
-    HashMap<Integer, Task> tasks = new HashMap<>();
-    HashMap<Integer, Epic> epics = new HashMap<>();
-    HashMap<Integer, Subtask> subTasks = new HashMap<>();
+    private HashMap<Integer, Task> tasks = new HashMap<>();
+    private HashMap<Integer, Epic> epics = new HashMap<>();
+    private HashMap<Integer, Subtask> subTasks = new HashMap<>();
 
 
     public void addTask(Task task) {
@@ -94,11 +94,11 @@ public class TaskManager {
     public ArrayList<Subtask> getListSubTasks() {
         return new ArrayList<Subtask>(subTasks.values());
 
-        }
+    }
 
 
     public ArrayList<Subtask> getListEpic(int id) {
-        if(epics.containsKey(id)) {
+        if (epics.containsKey(id)) {
             ArrayList<Subtask> subtasks = new ArrayList<>();
             for (Integer subId : epics.get(id).getSubIds()) {
                 subtasks.add(subtasks.get(subId));
