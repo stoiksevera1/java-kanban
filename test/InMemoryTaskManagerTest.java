@@ -1,7 +1,11 @@
 
+import Manager.*;
 import org.junit.jupiter.api.Test;
+import task.Epic;
+import task.Status;
+import task.Subtask;
+import task.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -184,9 +188,9 @@ class InMemoryTaskManagerTest {
         Subtask subtask4 = new Subtask("мало  есть", "похудеть", Status.IN_PROGRESS, 1);
         subtask4.setId(6);
         taskManager1.update(subtask4);
-        HistoryManager historyManager = new InMemoryHistoryManager();
 
-        List<Task> history = historyManager.getHistory();
+
+        List<Task> history = taskManager1.getHistory();
 
         Task taskSave = history.get(7);
 

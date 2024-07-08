@@ -1,12 +1,21 @@
+package Manager;
+
+import task.Epic;
+import task.Status;
+import task.Subtask;
+import task.Task;
+
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 public class InMemoryTaskManager implements TaskManager {
     private int nextId = 1;
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
-    private HashMap<Integer, Subtask> subTasks = new HashMap<>();
+    private Map<Integer, Task> tasks = new HashMap<>();
+    private Map<Integer, Epic> epics = new HashMap<>();
+    private Map<Integer, Subtask> subTasks = new HashMap<>();
 
     HistoryManager history = Managers.getDefaultHistory();
 
@@ -206,6 +215,10 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Такой ID не найден!");
         }
+    }
+
+    public List<Task> getHistory() {
+      return history.getHistory();
     }
 
 }

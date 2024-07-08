@@ -1,9 +1,13 @@
+package Manager;
+
+import task.Task;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private static final List<Task> history = new ArrayList<>(10);
+    private static List<Task> history = new ArrayList<>(10);
 
 
 

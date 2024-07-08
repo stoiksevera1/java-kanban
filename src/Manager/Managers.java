@@ -1,10 +1,12 @@
+package Manager;
+
 public final class  Managers   {
 
     private Managers() {
 
     }
 
-    static  TaskManager  getDefault() {
+    public static TaskManager getDefault() {
      return new InMemoryTaskManager();
   }
 

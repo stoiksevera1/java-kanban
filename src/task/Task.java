@@ -1,10 +1,12 @@
+package task;
+
 public class Task {
     private String name;
     private String description;
     private int id;
     private Status status;
 
-    protected Task(String name, String description, Status status) {
+    public Task(String name, String description, Status status) {
         setDescription(description);
         setName(name);
         setStatus(status);
@@ -52,7 +54,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "task.Task{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +

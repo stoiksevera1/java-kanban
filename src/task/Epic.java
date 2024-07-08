@@ -1,3 +1,5 @@
+package task;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -18,7 +20,7 @@ public class Epic extends Task {
         subIds.clear();
     }
 
-     void addSubId(Task subtask) {
+     public void addSubId(Task subtask) {
 
          if (subtask instanceof Subtask) {
              subIds.add(subtask.getId());
