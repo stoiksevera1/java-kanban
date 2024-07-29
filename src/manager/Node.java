@@ -2,7 +2,7 @@ package manager;
 
 import task.Task;
 
-public class Node <T extends Task> {
+public class Node<T extends Task> {
 
     public T data;
     public Node<T> next;
