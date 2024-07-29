@@ -1,6 +1,7 @@
 package task;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Integer> subIds = new ArrayList<>();
@@ -12,7 +13,7 @@ public class Epic extends Task {
 
     }
 
-    public void delSubId(int id){
+    public void delSubId(Integer id){
         subIds.remove(id);
     }
 
