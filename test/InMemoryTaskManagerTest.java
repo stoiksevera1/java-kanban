@@ -227,9 +227,8 @@ class InMemoryTaskManagerTest {
         taskManager1.delSubTaskById(3);
         taskManager1.delSubTaskById(4);
         taskManager1.delSubTaskById(5);
-        assertEquals(0,epic1.getSubIds().size());
-        assertEquals(0,subtask3.getId());
-
+        assertEquals(0, epic1.getSubIds().size());
+        assertEquals(0, subtask3.getId());
 
 
     }
@@ -248,8 +247,8 @@ class InMemoryTaskManagerTest {
         taskManager1.addTask(subtask3);
         taskManager1.delListEpics();
 
-        assertEquals(0,epic1.getSubIds().size());
-        assertEquals(0,subtask3.getId());
+        assertEquals(0, epic1.getSubIds().size());
+        assertEquals(0, subtask3.getId());
     }
 
     @Test
@@ -266,8 +265,8 @@ class InMemoryTaskManagerTest {
         taskManager1.addTask(subtask3);
         taskManager1.delListSubTasks();
 
-        assertEquals(0,epic1.getSubIds().size());
-        assertEquals(0,subtask3.getId());
+        assertEquals(0, epic1.getSubIds().size());
+        assertEquals(0, subtask3.getId());
     }
 }
 

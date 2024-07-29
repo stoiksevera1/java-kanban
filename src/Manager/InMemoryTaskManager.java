@@ -164,7 +164,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void delListTasks() {
         for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
-        tasks.get(entry.getKey()).setId(0);
+            tasks.get(entry.getKey()).setId(0);
         }
         tasks.clear();
     }
@@ -172,7 +172,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(Integer id) {
         if (tasks.containsKey(id)) {
-        history.add(tasks.get(id));
+            history.add(tasks.get(id));
             return tasks.get(id);
         } else {
             System.out.println("Такой ID не найден!");
@@ -218,7 +218,7 @@ public class InMemoryTaskManager implements TaskManager {
             for (Integer subId : epics.get(id).getSubIds()) {
                 subTasks.get(id).setId(0);
                 subTasks.remove(subId);
-              epics.get(id).delAllSubId();
+                epics.get(id).delAllSubId();
             }
             epics.get(id).setId(0);
             epics.remove(id);
@@ -240,7 +240,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public List<Task> getHistory() {
-      return history.getHistory();
+        return history.getHistory();
     }
 
 }
