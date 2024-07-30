@@ -169,6 +169,7 @@ class InMemoryTaskManagerTest {
         taskManager1.addTask(epic2);
         taskManager1.addTask(task1);
         taskManager1.addTask(task2);
+
         taskManager1.addTask(subTask1);
         taskManager1.addTask(subTask2);
         taskManager1.addTask(subtask3);
