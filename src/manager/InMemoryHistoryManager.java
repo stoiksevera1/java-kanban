@@ -12,42 +12,50 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private Node<Task> head = null;
 
-    private static Map<Integer, Node<Task>> history = new HashMap<>();
+    private  Map<Integer, Node<Task>> historyKey = new HashMap<>();
 
 
     @Override
     public void add(Task task) {
-        if (history.containsKey(task.getId())) {
-            remove(task.getId());
-            history.remove(task.getId());
+        if (historyKey.containsKey(task.getId())) {
+            if (head != null) {
+                remove(task.getId());
+
+            }
+            historyKey.put(task.getId(), linkLast(task));
+        } else {
+            historyKey.put(task.getId(), linkLast(task));
         }
-        history.put(task.getId(), linkLast(task));
     }
 
 
     @Override
     public List<Task> getHistory() {
         List<Task> historyList = new ArrayList<>();
-        Node<Task> iterableNode = head;
-        while (iterableNode.next != null) {
+        if (head != null) {
+            Node<Task> iterableNode = head;
+            while (iterableNode.next != null) {
+                historyList.add(iterableNode.data);
+                iterableNode = iterableNode.next;
+            }
             historyList.add(iterableNode.data);
-            iterableNode = iterableNode.next;
         }
         return historyList;
     }
 
     @Override
     public void remove(int id) {
-        Node<Task> removeNode = history.get(id);
-        if (!removeNode.equals(head)) {
-            if (removeNode.next != null) {
-                removeNode.next.prev = removeNode.prev;
-                removeNode.prev.next = removeNode.next;
-            } else {
-                removeNode.prev.next = null;
-            }
-        } else {
+        Node<Task> removeNode = historyKey.get(id);
+        if (head.next == null) {
             head = null;
+        } else if (removeNode.prev == null) {
+            head = head.next;
+            head.prev = null;
+        } else if (removeNode.next == null) {
+            removeNode.prev = null;
+        } else {
+            removeNode.prev.next = removeNode.next;
+            removeNode.next.prev = removeNode.prev;
         }
     }
 
