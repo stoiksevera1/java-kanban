@@ -134,11 +134,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void delListSubTasks() {
-        for (Map.Entry<Integer, Subtask> entry : subTasks.entrySet()) {
-            subTasks.get(entry.getKey()).setId(0);
-        }
-        for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
-            epics.get(entry.getKey()).delAllSubId();
+        for (Task subTask : subTasks.values()) {
+            history.remove(subTask.getId());
         }
         subTasks.clear();
         for (Epic epic : epics.values()) {
@@ -149,13 +146,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void delListEpics() {
-        for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
-            epics.get(entry.getKey()).setId(0);
-            epics.get(entry.getKey()).delAllSubId();
-
+        for (Task epic : epics.values()) {
+            history.remove(epic.getId());
         }
-        for (Map.Entry<Integer, Subtask> entry : subTasks.entrySet()) {
-            subTasks.get(entry.getKey()).setId(0);
+        for (Task subTask : subTasks.values()) {
+            history.remove(subTask.getId());
         }
         epics.clear();
         subTasks.clear();
@@ -163,8 +158,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void delListTasks() {
-        for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
-            tasks.get(entry.getKey()).setId(0);
+        for (Task task : tasks.values()) {
+            history.remove(task.getId());
         }
         tasks.clear();
     }
@@ -205,8 +200,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void delTaskById(Integer id) {
         if (tasks.containsKey(id)) {
-            tasks.get(id).setId(0);
             tasks.remove(id);
+            history.remove(id);
         } else {
             System.out.println("Такой ID не найден!");
         }
@@ -216,11 +211,11 @@ public class InMemoryTaskManager implements TaskManager {
     public void delEpicById(Integer id) {
         if (epics.containsKey(id)) {
             for (Integer subId : epics.get(id).getSubIds()) {
-                subTasks.get(id).setId(0);
+                history.remove(subId);
                 subTasks.remove(subId);
                 epics.get(id).delAllSubId();
             }
-            epics.get(id).setId(0);
+            history.remove(id);
             epics.remove(id);
         } else {
             System.out.println("Такой ID не найден!");
@@ -231,8 +226,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void delSubTaskById(Integer id) {
         if (subTasks.containsKey(id)) {
             epics.get(subTasks.get(id).getEpicId()).delSubId(id);
-            subTasks.get(id).setId(0);
             subTasks.remove(id);
+            history.remove(id);
 
         } else {
             System.out.println("Такой ID не найден!");

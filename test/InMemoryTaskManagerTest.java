@@ -7,6 +7,7 @@ import task.Subtask;
 import task.Task;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -229,7 +230,7 @@ class InMemoryTaskManagerTest {
         taskManager1.delSubTaskById(4);
         taskManager1.delSubTaskById(5);
         assertEquals(0, epic1.getSubIds().size());
-        assertEquals(0, subtask3.getId());
+        assertEquals(0, taskManager1.getListSubTasks().size());
 
 
     }
@@ -248,8 +249,8 @@ class InMemoryTaskManagerTest {
         taskManager1.addTask(subtask3);
         taskManager1.delListEpics();
 
-        assertEquals(0, epic1.getSubIds().size());
-        assertEquals(0, subtask3.getId());
+        assertEquals(0, taskManager1.getListEpics().size());
+        assertEquals(0, taskManager1.getListSubTasks().size());
     }
 
     @Test
@@ -265,9 +266,10 @@ class InMemoryTaskManagerTest {
         taskManager1.addTask(subTask2);
         taskManager1.addTask(subtask3);
         taskManager1.delListSubTasks();
+        List<Subtask> testListSubtask = taskManager1.getListSubTasks();
 
-        assertEquals(0, epic1.getSubIds().size());
-        assertEquals(0, subtask3.getId());
+
+        assertEquals(0, testListSubtask.size());
     }
 }
 
