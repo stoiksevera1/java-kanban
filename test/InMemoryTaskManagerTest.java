@@ -1,5 +1,5 @@
 
-import Manager.*;
+import manager.*;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.Status;
@@ -7,8 +7,10 @@ import task.Subtask;
 import task.Task;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InMemoryTaskManagerTest {
 
@@ -168,10 +170,24 @@ class InMemoryTaskManagerTest {
         taskManager1.addTask(epic2);
         taskManager1.addTask(task1);
         taskManager1.addTask(task2);
+
         taskManager1.addTask(subTask1);
         taskManager1.addTask(subTask2);
         taskManager1.addTask(subtask3);
 
+        taskManager1.getEpic(2);
+        taskManager1.getEpic(2);
+        taskManager1.getEpic(1);
+        taskManager1.getTask(5);
+        taskManager1.getTask(4);
+        taskManager1.getTask(3);
+        taskManager1.getTask(4);
+        taskManager1.getTask(3);
+        taskManager1.getTask(4);
+        taskManager1.getSubTask(5);
+        taskManager1.getSubTask(6);
+        taskManager1.getTask(4);
+        taskManager1.getEpic(1);
         taskManager1.getEpic(2);
         taskManager1.getEpic(1);
         taskManager1.getTask(5);
@@ -192,11 +208,68 @@ class InMemoryTaskManagerTest {
 
         List<Task> history = taskManager1.getHistory();
 
-        Task taskSave = history.get(7);
+        Task taskSave = history.get(4);
 
         assertNotEquals(subTask2, taskManager1.getSubTask(6));
-        assertEquals(subTask2, taskSave);
+        assertEquals(task2, taskSave);
     }
 
+    @Test
+    void testDellSubTask() {
+        Epic epic1 = new Epic("Сон", "Спать");
+        Epic epic2 = new Epic("Еда", "Есть");
+        Subtask subTask1 = new Subtask("долго спать", "проспать как можно дольше", Status.NEW, 1);
+        Subtask subTask2 = new Subtask("очень долго спать", "спать в два раза дольше чем в первый раз", Status.DONE, 1);
+        Subtask subtask3 = new Subtask("Много есть", "получить ачивку обжорство", Status.IN_PROGRESS, 2);
+        taskManager1.addTask(epic1);
+        taskManager1.addTask(epic2);
+        taskManager1.addTask(subTask1);
+        taskManager1.addTask(subTask2);
+        taskManager1.addTask(subtask3);
+        taskManager1.delSubTaskById(3);
+        taskManager1.delSubTaskById(4);
+        taskManager1.delSubTaskById(5);
+        assertEquals(0, epic1.getSubIds().size());
+        assertEquals(0, taskManager1.getListSubTasks().size());
+
+
+    }
+
+    @Test
+    void testDellAllEpic() {
+        Epic epic1 = new Epic("Сон", "Спать");
+        Epic epic2 = new Epic("Еда", "Есть");
+        Subtask subTask1 = new Subtask("долго спать", "проспать как можно дольше", Status.NEW, 1);
+        Subtask subTask2 = new Subtask("очень долго спать", "спать в два раза дольше чем в первый раз", Status.DONE, 1);
+        Subtask subtask3 = new Subtask("Много есть", "получить ачивку обжорство", Status.IN_PROGRESS, 2);
+        taskManager1.addTask(epic1);
+        taskManager1.addTask(epic2);
+        taskManager1.addTask(subTask1);
+        taskManager1.addTask(subTask2);
+        taskManager1.addTask(subtask3);
+        taskManager1.delListEpics();
+
+        assertEquals(0, taskManager1.getListEpics().size());
+        assertEquals(0, taskManager1.getListSubTasks().size());
+    }
+
+    @Test
+    void testDellAllSubTask() {
+        Epic epic1 = new Epic("Сон", "Спать");
+        Epic epic2 = new Epic("Еда", "Есть");
+        Subtask subTask1 = new Subtask("долго спать", "проспать как можно дольше", Status.NEW, 1);
+        Subtask subTask2 = new Subtask("очень долго спать", "спать в два раза дольше чем в первый раз", Status.DONE, 1);
+        Subtask subtask3 = new Subtask("Много есть", "получить ачивку обжорство", Status.IN_PROGRESS, 2);
+        taskManager1.addTask(epic1);
+        taskManager1.addTask(epic2);
+        taskManager1.addTask(subTask1);
+        taskManager1.addTask(subTask2);
+        taskManager1.addTask(subtask3);
+        taskManager1.delListSubTasks();
+        List<Subtask> testListSubtask = taskManager1.getListSubTasks();
+
+
+        assertEquals(0, testListSubtask.size());
+    }
 }
 

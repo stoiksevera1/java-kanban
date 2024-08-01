@@ -1,4 +1,4 @@
-package Manager;
+package manager;
 
 import task.Epic;
 import task.Status;
@@ -17,7 +17,8 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, Subtask> subTasks = new HashMap<>();
 
-    HistoryManager history = Managers.getDefaultHistory();
+    HistoryManager history = new InMemoryHistoryManager();
+
 
     @Override
     public void addTask(Task task) {
@@ -133,6 +134,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void delListSubTasks() {
+        for (Task subTask : subTasks.values()) {
+            history.remove(subTask.getId());
+        }
         subTasks.clear();
         for (Epic epic : epics.values()) {
             epic.delAllSubId();
@@ -142,19 +146,28 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void delListEpics() {
+        for (Task epic : epics.values()) {
+            history.remove(epic.getId());
+        }
+        for (Task subTask : subTasks.values()) {
+            history.remove(subTask.getId());
+        }
         epics.clear();
         subTasks.clear();
     }
 
     @Override
     public void delListTasks() {
+        for (Task task : tasks.values()) {
+            history.remove(task.getId());
+        }
         tasks.clear();
     }
 
     @Override
     public Task getTask(Integer id) {
         if (tasks.containsKey(id)) {
-        history.add(tasks.get(id));
+            history.add(tasks.get(id));
             return tasks.get(id);
         } else {
             System.out.println("Такой ID не найден!");
@@ -188,6 +201,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void delTaskById(Integer id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
+            history.remove(id);
         } else {
             System.out.println("Такой ID не найден!");
         }
@@ -197,9 +211,10 @@ public class InMemoryTaskManager implements TaskManager {
     public void delEpicById(Integer id) {
         if (epics.containsKey(id)) {
             for (Integer subId : epics.get(id).getSubIds()) {
+                history.remove(subId);
                 subTasks.remove(subId);
-              epics.get(id).delAllSubId();
             }
+            history.remove(id);
             epics.remove(id);
         } else {
             System.out.println("Такой ID не найден!");
@@ -211,6 +226,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subTasks.containsKey(id)) {
             epics.get(subTasks.get(id).getEpicId()).delSubId(id);
             subTasks.remove(id);
+            history.remove(id);
 
         } else {
             System.out.println("Такой ID не найден!");
@@ -218,7 +234,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public List<Task> getHistory() {
-      return history.getHistory();
+        return history.getHistory();
     }
 
 }
