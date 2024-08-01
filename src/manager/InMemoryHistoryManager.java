@@ -64,18 +64,16 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public Node<Task> linkLast(Task task) {
         Node<Task> newNode = new Node<>(task);
-        Node<Task> currentNode = head;
 
         if (head == null) {
             head = newNode;
+            tail = newNode;
             return head;
         } else {
+            newNode.prev = tail;
+            tail.next = newNode;
             tail = newNode;
-            while (currentNode.next != null) {
-                currentNode = currentNode.next;
-            }
-            currentNode.next = tail;
-            tail.prev = currentNode;
+
         }
         return tail;
     }
