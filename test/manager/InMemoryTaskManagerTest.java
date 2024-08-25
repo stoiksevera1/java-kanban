@@ -15,7 +15,7 @@ class InMemoryTaskManagerTest {
 
 
     TaskManager taskManager1 = Managers.getDefault();
-TaskManager getTaskManager2 = new FileBackedTaskManager();
+
 
     @Test
     void addNewTask() {
@@ -113,13 +113,13 @@ TaskManager getTaskManager2 = new FileBackedTaskManager();
     @Test
     void addAllTask() { //пришлось метод добавления самой подзадачи изменять  больше никакого теста вголову не пришло
         Task task = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
-        getTaskManager2.addTask(task);
+        taskManager1.addTask(task);
 
         Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
-        getTaskManager2.addTask(epic);
+        taskManager1.addTask(epic);
 
         Subtask subtask = new Subtask("Test addNewTask", "Test addNewTask description", Status.NEW, 2);
-        getTaskManager2.addTask(subtask);
+        taskManager1.addTask(subtask);
 
         Task task1 = taskManager1.getTask(1);
         Task epic1 = taskManager1.getEpic(2);
