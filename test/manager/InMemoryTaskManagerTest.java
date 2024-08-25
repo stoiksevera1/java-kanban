@@ -1,5 +1,5 @@
+package manager;
 
-import manager.*;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.Status;
@@ -7,7 +7,6 @@ import task.Subtask;
 import task.Task;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,7 +15,7 @@ class InMemoryTaskManagerTest {
 
 
     TaskManager taskManager1 = Managers.getDefault();
-
+TaskManager getTaskManager2 = new FileBackedTaskManager();
 
     @Test
     void addNewTask() {
@@ -106,7 +105,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     void initialUtilClass() {
-        InMemoryTaskManager taskManager2 = (InMemoryTaskManager) Managers.getDefault();
+        InMemoryTaskManager taskManager5 = (InMemoryTaskManager) Managers.getDefault();
         TaskManager taskManager3 = Managers.getDefault();
 
     }
@@ -114,13 +113,13 @@ class InMemoryTaskManagerTest {
     @Test
     void addAllTask() { //пришлось метод добавления самой подзадачи изменять  больше никакого теста вголову не пришло
         Task task = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
-        taskManager1.addTask(task);
+        getTaskManager2.addTask(task);
 
         Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
-        taskManager1.addTask(epic);
+        getTaskManager2.addTask(epic);
 
         Subtask subtask = new Subtask("Test addNewTask", "Test addNewTask description", Status.NEW, 2);
-        taskManager1.addTask(subtask);
+        getTaskManager2.addTask(subtask);
 
         Task task1 = taskManager1.getTask(1);
         Task epic1 = taskManager1.getEpic(2);
