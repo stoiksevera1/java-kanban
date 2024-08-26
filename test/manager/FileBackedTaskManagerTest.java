@@ -13,14 +13,15 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class FileBackedTaskManagerTest {
-File file1;
+    File file1;
+
     @Test
     void loadFromFile() throws IOException {
-FileBackedTaskManager manager1 = FileBackedTaskManager.loadFromFile(File.createTempFile("testFile", ".csv"));
+        FileBackedTaskManager manager1 = FileBackedTaskManager.loadFromFile(File.createTempFile("testFile", ".csv"));
 
     }
-
 
 
     @Test
@@ -43,7 +44,5 @@ FileBackedTaskManager manager1 = FileBackedTaskManager.loadFromFile(File.createT
         manager1.addTask(subTask1);
         manager1.addTask(subTask2);
         manager1.addTask(subtask3);
-
-
     }
 }

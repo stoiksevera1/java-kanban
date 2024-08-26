@@ -1,4 +1,8 @@
 id,type,name,status,description,epic
-1,TASK,Test addNewTask,NEW,Test addNewTask description
-2,EPIC,Test addNewTask,NEW,Test addNewTask description
-3,SUBTASK,Test addNewTask,NEW,Test addNewTask description,2
+3,TASK,Бег,DONE,пробежать как можно дольше
+4,TASK,Приседания,NEW,приседать как можно больше
+1,EPIC,Сон,IN_PROGRESS,Спать
+2,EPIC,Еда,IN_PROGRESS,Есть
+5,SUBTASK,долго спать,NEW,проспать как можно дольше,1
+6,SUBTASK,очень долго спать,DONE,спать в два раза дольше чем в первый раз,1
+7,SUBTASK,Много есть,IN_PROGRESS,получить ачивку обжорство,2
