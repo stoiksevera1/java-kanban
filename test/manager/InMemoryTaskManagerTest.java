@@ -1,5 +1,5 @@
+package manager;
 
-import manager.*;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.Status;
@@ -7,7 +7,6 @@ import task.Subtask;
 import task.Task;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -106,7 +105,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     void initialUtilClass() {
-        InMemoryTaskManager taskManager2 = (InMemoryTaskManager) Managers.getDefault();
+        InMemoryTaskManager taskManager5 = (InMemoryTaskManager) Managers.getDefault();
         TaskManager taskManager3 = Managers.getDefault();
 
     }
