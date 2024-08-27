@@ -156,6 +156,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         } else if (split[1].equals(Tasks.EPIC.name())) {
             taskFromString = new Epic(split[2], split[4]);
+            taskFromString.setStatus(Status.valueOf(split[3]));
         } else {
             taskFromString = new Subtask(split[2], split[4], Status.valueOf(split[3]), Integer.parseInt(split[5]));
         }
