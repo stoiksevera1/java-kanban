@@ -21,11 +21,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addTask(Task task) {
-        task.setId(nextId);
-        nextId++;
         if (taskSortStartTime.stream()
                 .noneMatch(task1 -> intersectionOfTasks(task1, task))
         ) {
+            task.setId(nextId);
+            nextId++;
             tasks.put(task.getId(), task);
             if (task.getStartTime() != null) {
                 taskSortStartTime.add(task);
@@ -37,12 +37,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addTask(Subtask subTask) {
-        if (epics.containsKey(subTask.getEpicId())) {
-            subTask.setId(nextId);
-            nextId++;
-            if (taskSortStartTime.stream()
-                    .noneMatch(task1 -> intersectionOfTasks(task1, subTask))
-            ) {
+        if ((subTask.getStartTime() == null) || taskSortStartTime.stream()
+                .noneMatch(task1 -> intersectionOfTasks(task1, subTask))
+        ) {
+            if (epics.containsKey(subTask.getEpicId())) {
+                subTask.setId(nextId);
+                nextId++;
                 subTasks.put(subTask.getId(), subTask);
                 if (subTask.getStartTime() != null) {
                     taskSortStartTime.add(subTask);
@@ -50,46 +50,59 @@ public class InMemoryTaskManager implements TaskManager {
                 epics.get(subTask.getEpicId()).addSubId(subTask);
                 synStatusEpic(epics.get(subTask.getEpicId()));
                 synTimeEpic(epics.get(subTask.getEpicId()));
-            } else {
-                System.out.println("Задача не может быть добавлена. Время выполнения пересекается с ранее созданой задачей");
-            }
 
+
+            } else {
+                System.out.println("Эпика с таким ID не существует подзадача не может быть добавлена.");
+            }
         } else {
-            System.out.println("Эпика с таким ID не существует подзадача не может быть добавлена.");
+            System.out.println("Задача не может быть добавлена. Время выполнения пересекается с ранее созданой задачей");
         }
 
     }
 
     private void synTimeEpic(Epic epic) {
         if (epic.getSubIds().size() < 2) {
-            epic.setStartTime(subTasks.get(epic.getSubIds().getFirst()).getStartTime());
-            epic.setDuration(subTasks.get(epic.getSubIds().getFirst()).getDuration());
+            if ((epic.getSubIds().isEmpty()) || subTasks.get(epic.getSubIds().getFirst()).getStartTime() == null) {
+                epic.setStartTime(null);
+                epic.setDuration(null);
+
+            } else {
+                epic.setStartTime(subTasks.get(epic.getSubIds().getFirst()).getStartTime());
+                epic.setDuration(subTasks.get(epic.getSubIds().getFirst()).getDuration());
+            }
         } else {
-            epic.getSubIds().stream()
-                    .map(subId -> subTasks.get(subId))
-                    .min(Comparator.comparing(Subtask::getStartTime))
-                    .ifPresent(subtask -> epic.setStartTime(subtask.getStartTime()));
+            if(epic.getSubIds().stream()
+                    .map(subId -> subTasks.get(subId)).anyMatch(subtask -> (subtask.getStartTime() != null))) {
 
-            epic.getSubIds().stream()
-                    .map(subId -> subTasks.get(subId))
-                    .max(Comparator.comparing(Subtask::getStartTime))
-                    .ifPresent(subtask -> epic.setEndTime(subtask.getStartTime().plus(subtask.getDuration())));
+                epic.getSubIds().stream()
+                        .map(subId -> subTasks.get(subId))
+                        .filter(subtask -> (subtask.getStartTime() != null))
+                        .min(Comparator.comparing(Subtask::getStartTime))
+                        .ifPresent(subtask -> epic.setStartTime(subtask.getStartTime()));
 
-            epic.setDuration(Duration.ofMinutes(epic.getSubIds().stream()
-                    .map(subId -> subTasks.get(subId))
-                    .map(Task::getDuration)
-                    .mapToInt(Duration::toMinutesPart)
-                    .sum()
-            ));
+                epic.getSubIds().stream()
+                        .map(subId -> subTasks.get(subId))
+                        .filter(subtask -> (subtask.getStartTime() != null))
+                        .max(Comparator.comparing(Subtask::getStartTime))
+                        .ifPresent(subtask -> epic.setEndTime(subtask.getStartTime().plus(subtask.getDuration())));
 
+                epic.setDuration(Duration.ofMinutes(epic.getSubIds().stream()
+                        .map(subId -> subTasks.get(subId))
+                        .filter(subtask -> (subtask.getStartTime() != null))
+                        .map(Task::getDuration)
+                        .mapToInt(Duration::toMinutesPart)
+                        .sum()
+                ));
+            } else {
+                epic.setStartTime(null);
+                epic.setDuration(null);
+            }
         }
     }
 
     private boolean intersectionOfTasks(Task task1, Task task2) {
-        if (task1.getStartTime().equals(task2.getStartTime())) {
-            return true;
-        } else
-            return (!(task1.getStartTime().isBefore(task2.getStartTime()) & task1.getEndTime().isBefore(task2.getStartTime())))
+            return (!(task1.getEndTime().isBefore(task2.getStartTime())))
                     && (!task1.getStartTime().isAfter(task2.getEndTime()));
     }
 
@@ -129,7 +142,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void update(Task task) {
         if (tasks.containsKey(task.getId())) {
-            taskSortStartTime.remove(task);
+            taskSortStartTime.remove(tasks.get(task.getId()));
             if (taskSortStartTime.stream()
                     .noneMatch(task1 -> intersectionOfTasks(task1, task))
             ) {
@@ -149,7 +162,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void update(Subtask subtask) {
         if (subTasks.containsKey(subtask.getId())) {
-            taskSortStartTime.remove(subtask);
+            taskSortStartTime.remove(subTasks.get(subtask.getId()));
             if (taskSortStartTime.stream()
                     .noneMatch(task1 -> intersectionOfTasks(task1, subtask))
             ) {
@@ -305,6 +318,9 @@ public class InMemoryTaskManager implements TaskManager {
     public void delSubTaskById(Integer id) {
         if (subTasks.containsKey(id)) {
             epics.get(subTasks.get(id).getEpicId()).delSubId(id);
+            synStatusEpic(epics.get(subTasks.get(id).getEpicId()));
+            synTimeEpic(epics.get(subTasks.get(id).getEpicId()));
+
             taskSortStartTime.remove(subTasks.get(id));
             subTasks.remove(id);
             history.remove(id);

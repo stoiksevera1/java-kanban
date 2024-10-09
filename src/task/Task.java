@@ -19,6 +19,12 @@ public class Task {
         setStartTime(startTime);
     }
 
+    public Task(String name, String description, Status status) {
+        setDescription(description);
+        setName(name);
+        setStatus(status);
+    }
+
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
@@ -85,6 +91,11 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plus(duration);
+        if (startTime == null) {
+            return null;
+        } else {
+            return startTime.plus(duration);
+        }
     }
+
 }

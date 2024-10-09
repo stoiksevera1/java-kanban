@@ -303,8 +303,8 @@ abstract class TaskManagerTest {
         Epic epic1 = new Epic("Сон", "Спать");
         Epic epic2 = new Epic("Еда", "Есть");
         Subtask subTask1 = new Subtask("долго спать", "проспать как можно дольше", Status.NEW, 1, Duration.ofMinutes(25), LocalDateTime.of(2024, 11, 21, 12, 50));
-        Subtask subTask2 = new Subtask("очень долго спать", "спать в два раза дольше чем в первый раз", Status.DONE, 1, Duration.ofMinutes(25), LocalDateTime.of(2024, 11, 21, 12, 50));
-        Subtask subtask3 = new Subtask("Много есть", "получить ачивку обжорство", Status.IN_PROGRESS, 2, Duration.ofMinutes(25), LocalDateTime.of(2024, 11, 23, 12, 50));
+        Subtask subTask2 = new Subtask("очень долго спать", "спать в два раза дольше чем в первый раз", Status.DONE, 1, Duration.ofMinutes(25), LocalDateTime.of(2024, 11, 21, 13, 50));
+        Subtask subtask3 = new Subtask("Много есть", "получить ачивку обжорство", Status.IN_PROGRESS, 1);
         taskManager1.addTask(epic1);
         taskManager1.addTask(epic2);
         taskManager1.addTask(subTask1);
