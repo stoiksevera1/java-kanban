@@ -72,7 +72,7 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.setDuration(subTasks.get(epic.getSubIds().getFirst()).getDuration());
             }
         } else {
-            if(epic.getSubIds().stream()
+            if (epic.getSubIds().stream()
                     .map(subId -> subTasks.get(subId)).anyMatch(subtask -> (subtask.getStartTime() != null))) {
 
                 epic.getSubIds().stream()
@@ -102,8 +102,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private boolean intersectionOfTasks(Task task1, Task task2) {
-            return (!(task1.getEndTime().isBefore(task2.getStartTime())))
-                    && (!task1.getStartTime().isAfter(task2.getEndTime()));
+        return (!(task1.getEndTime().isBefore(task2.getStartTime())))
+                && (!task1.getStartTime().isAfter(task2.getEndTime()));
     }
 
 
