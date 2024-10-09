@@ -21,7 +21,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addTask(Task task) {
-        if (taskSortStartTime.stream()
+        if ((task.getStartTime() == null) || taskSortStartTime.stream()
                 .noneMatch(task1 -> intersectionOfTasks(task1, task))
         ) {
             task.setId(nextId);

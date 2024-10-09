@@ -149,8 +149,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Tasks i = Tasks.TASK;
         if (task instanceof Epic) {
             i = Tasks.EPIC;
-            return ("%d,%s,%s,%s,%s,%s,%s".formatted(task.getId(), i, task.getName(), task.getStatus(),
-                    task.getDescription(), task.getDuration().toMinutes(), task.getStartTime().toString()));
+            return ("%d,%s,%s,%s,%s".formatted(task.getId(), i, task.getName(), task.getStatus(),
+                    task.getDescription()));
         } else if (task instanceof Subtask) {
             i = Tasks.SUBTASK;
             return ("%d,%s,%s,%s,%s,%d,%s,%s".formatted(task.getId(), i, task.getName(), task.getStatus(),

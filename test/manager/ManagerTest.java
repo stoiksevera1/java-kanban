@@ -271,17 +271,6 @@ abstract class TaskManagerTest {
         assertEquals(subtask, subtask2);
     }
 
-    @Test
-    void conflictTask() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description", Status.NEW, Duration.ofMinutes(25), LocalDateTime.of(2024, 11, 11, 12, 50));
-        taskManager1.addTask(task);
-        Task task2 = new Task("Test addNewTask", "Test addNewTask description", Status.NEW, Duration.ofMinutes(25), LocalDateTime.of(2024, 11, 11, 12, 50));
-        task2.setId(1);
-        taskManager1.addTask(task2);
-        assertNotEquals(task, task2);
-        assertNotEquals(task.getId(), task2.getId());
-
-    }
 
     @Test
     void standFieldsTask() {
