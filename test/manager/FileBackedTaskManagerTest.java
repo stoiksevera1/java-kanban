@@ -31,7 +31,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
         FileBackedTaskManager manager1 = FileBackedTaskManager.loadFromFile(file1);
         Epic epic1 = new Epic("Сон", "Спать");
         Epic epic2 = new Epic("Еда", "Есть");
-        Task task1 = new Task("Бег", "пробежать как можно дольше", Status.DONE, Duration.ofMinutes(10), LocalDateTime.of(2024, 11, 24, 12, 50));
+        Task task1 = new Task("Бег", "пробежать как можно дольше", Status.DONE);
         Task task2 = new Task("Приседания", "приседать как можно больше", Status.NEW, Duration.ofMinutes(10), LocalDateTime.of(2024, 11, 25, 12, 50));
         Subtask subTask1 = new Subtask("долго спать", "проспать как можно дольше", Status.DONE, 1, Duration.ofMinutes(15), LocalDateTime.of(2024, 11, 20, 12, 50));
         Subtask subTask2 = new Subtask("очень долго спать", "спать в два раза дольше чем в первый раз", Status.DONE, 1, Duration.ofMinutes(50), LocalDateTime.of(2024, 11, 27, 12, 50));

@@ -41,6 +41,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                             }
                     )
                     .filter(task -> !(task instanceof Epic))
+                    .filter(task -> task.getStartTime() != null)
                     .sorted(Comparator.comparing(Task::getStartTime))
                     .collect(Collectors.toCollection(LinkedHashSet::new));
             if (split.length > 0) loadManager.nextId = split.length;
@@ -149,16 +150,31 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Tasks i = Tasks.TASK;
         if (task instanceof Epic) {
             i = Tasks.EPIC;
-            return ("%d,%s,%s,%s,%s".formatted(task.getId(), i, task.getName(), task.getStatus(),
-                    task.getDescription()));
+            if (task.getStartTime() == null) {
+                return ("%d,%s,%s,%s,%s,".formatted(task.getId(), i, task.getName(), task.getStatus(),
+                        task.getDescription()));
+            } else {
+                return ("%d,%s,%s,%s,%s,%s,%s".formatted(task.getId(), i, task.getName(), task.getStatus(),
+                        task.getDescription(), task.getDuration().toMinutes(), task.getStartTime().toString()));
+            }
         } else if (task instanceof Subtask) {
             i = Tasks.SUBTASK;
-            return ("%d,%s,%s,%s,%s,%d,%s,%s".formatted(task.getId(), i, task.getName(), task.getStatus(),
-                    task.getDescription(), ((Subtask) task).getEpicId(), task.getDuration().toMinutes(),
-                    task.getStartTime().toString()));
+            if (task.getStartTime() == null) {
+                return ("%d,%s,%s,%s,%s,%d".formatted(task.getId(), i, task.getName(), task.getStatus(),
+                        task.getDescription(), ((Subtask) task).getEpicId()));
+            } else {
+                return ("%d,%s,%s,%s,%s,%d,%s,%s".formatted(task.getId(), i, task.getName(), task.getStatus(),
+                        task.getDescription(), ((Subtask) task).getEpicId(), task.getDuration().toMinutes(),
+                        task.getStartTime().toString()));
+            }
         } else {
-            return ("%d,%s,%s,%s,%s,%s,%s".formatted(task.getId(), i, task.getName(), task.getStatus(),
-                    task.getDescription(), task.getDuration().toMinutes(), task.getStartTime().toString()));
+            if (task.getStartTime() == null) {
+                return ("%d,%s,%s,%s,%s".formatted(task.getId(), i, task.getName(), task.getStatus(),
+                        task.getDescription()));
+            } else {
+                return ("%d,%s,%s,%s,%s,%s,%s".formatted(task.getId(), i, task.getName(), task.getStatus(),
+                        task.getDescription(), task.getDuration().toMinutes(), task.getStartTime().toString()));
+            }
         }
     }
 
@@ -166,26 +182,39 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String[] split = value.split(",");
 
         if (split[1].equals(Tasks.TASK.name())) {
-            Task taskFromString = new Task(split[2], split[4], Status.valueOf(split[3]),
-                    Duration.ofMinutes(Long.parseLong(split[5])), LocalDateTime.parse(split[6]));
-            taskFromString.setId(parseInt(split[0]));
-            return taskFromString;
+            if (split.length <= 5) {
+                Task taskFromString = new Task(split[2], split[4], Status.valueOf(split[3]));
+                taskFromString.setId(parseInt(split[0]));
+                return taskFromString;
+            } else {
+                Task taskFromString = new Task(split[2], split[4], Status.valueOf(split[3]),
+                        Duration.ofMinutes(Long.parseLong(split[5])), LocalDateTime.parse(split[6]));
+                taskFromString.setId(parseInt(split[0]));
+                return taskFromString;
+            }
+
 
         } else if (split[1].equals(Tasks.EPIC.name())) {
             Epic taskFromString = new Epic(split[2], split[4]);
             taskFromString.setStatus(Status.valueOf(split[3]));
             taskFromString.setId(parseInt(split[0]));
-            taskFromString.setStartTime(LocalDateTime.parse(split[6]));
-            taskFromString.setDuration(Duration.ofMinutes(Long.parseLong(split[5])));
-            taskFromString.setEndTime(taskFromString.getStartTime().plus(taskFromString.getDuration()));
+            if (split.length > 5) {
+                taskFromString.setStartTime(LocalDateTime.parse(split[6]));
+                taskFromString.setDuration(Duration.ofMinutes(Long.parseLong(split[5])));
+                taskFromString.setEndTime(taskFromString.getStartTime().plus(taskFromString.getDuration()));
+            }
             return taskFromString;
         } else {
-            Subtask taskFromString = new Subtask(split[2], split[4], Status.valueOf(split[3]), parseInt(split[5]),
-                    Duration.ofMinutes(Long.parseLong(split[6])), LocalDateTime.parse(split[7]));
-            taskFromString.setId(parseInt(split[0]));
-            return taskFromString;
+            if (split.length <= 6) {
+                Task taskFromString = new Subtask(split[2], split[4], Status.valueOf(split[3]), parseInt(split[5]));
+                taskFromString.setId(parseInt(split[0]));
+                return taskFromString;
+            } else {
+                Subtask taskFromString = new Subtask(split[2], split[4], Status.valueOf(split[3]), parseInt(split[5]),
+                        Duration.ofMinutes(Long.parseLong(split[6])), LocalDateTime.parse(split[7]));
+                taskFromString.setId(parseInt(split[0]));
+                return taskFromString;
+            }
         }
-
-
     }
 }
