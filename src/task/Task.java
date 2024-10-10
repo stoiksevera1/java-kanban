@@ -1,16 +1,36 @@
 package task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Task {
     private String name;
     private String description;
     private int id;
     private Status status;
+    private Duration duration;
+    private LocalDateTime startTime;
+
+    public Task(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
+        setDescription(description);
+        setName(name);
+        setStatus(status);
+        setDuration(duration);
+        setStartTime(startTime);
+    }
 
     public Task(String name, String description, Status status) {
         setDescription(description);
         setName(name);
         setStatus(status);
+    }
 
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public Duration getDuration() {
+        return duration;
     }
 
     public void setDescription(String description) {
@@ -61,4 +81,21 @@ public class Task {
                 ", status=" + status +
                 '}';
     }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null) {
+            return null;
+        } else {
+            return startTime.plus(duration);
+        }
+    }
+
 }
