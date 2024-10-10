@@ -66,10 +66,12 @@ public class InMemoryTaskManager implements TaskManager {
             if ((epic.getSubIds().isEmpty()) || subTasks.get(epic.getSubIds().getFirst()).getStartTime() == null) {
                 epic.setStartTime(null);
                 epic.setDuration(null);
+                epic.setEndTime(null);
 
             } else {
                 epic.setStartTime(subTasks.get(epic.getSubIds().getFirst()).getStartTime());
                 epic.setDuration(subTasks.get(epic.getSubIds().getFirst()).getDuration());
+                epic.setEndTime(subTasks.get(epic.getSubIds().getFirst()).getEndTime());
             }
         } else {
             if (epic.getSubIds().stream()
@@ -97,6 +99,7 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 epic.setStartTime(null);
                 epic.setDuration(null);
+                epic.setEndTime(null);
             }
         }
     }
