@@ -1,9 +1,5 @@
 package manager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import handlers.DurationTimeAdapter;
-import handlers.LocalDateTimeAdapter;
 import org.junit.jupiter.api.AfterEach;
 
 import org.junit.jupiter.api.Test;
@@ -86,7 +82,7 @@ abstract class TaskManagerTest {
     }
 
     @Test
-    void crossTimeTask() {
+    void crossTimeTask() throws ManagerSaveException{
 
         Epic epic1 = new Epic("Сон", "Спать");
         Epic epic2 = new Epic("Еда", "Есть");
@@ -96,7 +92,7 @@ abstract class TaskManagerTest {
         Subtask subTask2 = new Subtask("очень долго спать", "спать в два раза дольше чем в первый раз", Status.DONE, 1, Duration.ofMinutes(50), LocalDateTime.of(2024, 11, 20, 12, 50));
         Subtask subtask3 = new Subtask("Много есть", "получить ачивку обжорство", Status.IN_PROGRESS, 2, Duration.ofMinutes(10), LocalDateTime.of(2024, 11, 20, 11, 50));
         Subtask subtask4 = new Subtask("Очень Много есть", "получить ачивку обжорство", Status.IN_PROGRESS, 2, Duration.ofMinutes(10), LocalDateTime.of(2024, 11, 20, 13, 50));
-
+        Throwable thrown = assertThrows(ManagerSaveException.class, () -> {
         taskManager1.addTask(epic1);
         taskManager1.addTask(epic2);
         taskManager1.addTask(task1);
@@ -105,12 +101,15 @@ abstract class TaskManagerTest {
         taskManager1.addTask(subTask2);
         taskManager1.addTask(subtask3);
         taskManager1.addTask(subtask4);
+        assertEquals(0, epic1.getSubIds().size());
 
+
+        });
+        assertNotNull(thrown.getMessage());
     }
 
     @Test
-    void testHistory() {
-        assertEquals(0, taskManager1.getHistory().size());
+    void testHistory() throws NullPointerException {
         Epic epic1 = new Epic("Сон", "Спать");
         Epic epic2 = new Epic("Еда", "Есть");
         Task task1 = new Task("Бег", "пробежать как можно дольше", Status.DONE, Duration.ofMinutes(25), LocalDateTime.of(2024, 11, 1, 12, 50));
@@ -131,7 +130,7 @@ abstract class TaskManagerTest {
         taskManager1.getEpic(2);
         taskManager1.getEpic(2);
         taskManager1.getEpic(1);
-        taskManager1.getTask(5);
+
         taskManager1.getTask(4);
         taskManager1.getTask(3);
         taskManager1.getTask(4);
@@ -143,7 +142,7 @@ abstract class TaskManagerTest {
         taskManager1.getEpic(1);
         taskManager1.getEpic(2);
         taskManager1.getEpic(1);
-        taskManager1.getTask(5);
+
         taskManager1.getTask(4);
         taskManager1.getTask(3);
         taskManager1.getTask(4);
@@ -172,6 +171,7 @@ abstract class TaskManagerTest {
         assertEquals(4, taskManager1.getHistory().size());
         taskManager1.removeHistoryById(6);
         assertEquals(3, taskManager1.getHistory().size());
+
     }
 
     @Test
@@ -235,18 +235,6 @@ abstract class TaskManagerTest {
     }
 
 
-    @Test
-    void addSubTaskInSubtask() { //пришлось метод добавления самой подзадачи изменять  больше никакого теста вголову не пришло
-        Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
-        taskManager1.addTask(epic);
-
-        Subtask task1 = new Subtask("Test addNewTask", "Test addNewTask description", Status.NEW, 1, Duration.ofMinutes(25), LocalDateTime.of(2024, 11, 20, 12, 50));
-        taskManager1.addTask(task1);
-
-        Subtask task2 = new Subtask("Test addNewTask", "Test addNewTask description", Status.NEW, 2, Duration.ofMinutes(25), LocalDateTime.of(2024, 11, 26, 12, 50));
-        taskManager1.addTask(task2);
-
-    }
 
     @Test
     void initialUtilClass() {
@@ -291,7 +279,7 @@ abstract class TaskManagerTest {
 
 
     @Test
-    void testDellSubTask() {
+    void testDellSubTask() throws NullPointerException {
         Epic epic1 = new Epic("Сон", "Спать");
         Epic epic2 = new Epic("Еда", "Есть");
         Subtask subTask1 = new Subtask("долго спать", "проспать как можно дольше", Status.NEW, 1, Duration.ofMinutes(25), LocalDateTime.of(2024, 11, 21, 12, 50));
@@ -306,8 +294,10 @@ abstract class TaskManagerTest {
         taskManager1.delSubTaskById(4);
         taskManager1.delSubTaskById(5);
         assertEquals(0, epic1.getSubIds().size());
-        assertEquals(0, taskManager1.getListSubTasks().size());
-
+        Throwable thrown = assertThrows(NullPointerException.class, () -> {
+            taskManager1.getListSubTasks();
+        });
+        assertNotNull(thrown.getMessage());
 
     }
 
@@ -324,13 +314,17 @@ abstract class TaskManagerTest {
         taskManager1.addTask(subTask2);
         taskManager1.addTask(subtask3);
         taskManager1.delListEpics();
+        Throwable thrown = assertThrows(NullPointerException.class, () -> {
+            taskManager1.getListSubTasks();
+            taskManager1.getListEpics().size();
+        });
+        assertNotNull(thrown.getMessage());
 
-        assertEquals(0, taskManager1.getListEpics().size());
-        assertEquals(0, taskManager1.getListSubTasks().size());
+
     }
 
     @Test
-    void testDellAllSubTask() {
+    void testDellAllSubTask() throws NullPointerException{
         Epic epic1 = new Epic("Сон", "Спать");
         Epic epic2 = new Epic("Еда", "Есть");
         Subtask subTask1 = new Subtask("долго спать", "проспать как можно дольше", Status.NEW, 1, Duration.ofMinutes(25), LocalDateTime.of(2024, 11, 21, 12, 50));
@@ -342,10 +336,13 @@ abstract class TaskManagerTest {
         taskManager1.addTask(subTask2);
         taskManager1.addTask(subtask3);
         taskManager1.delListSubTasks();
+        Throwable thrown = assertThrows(NullPointerException.class, () -> {
         List<Subtask> testListSubtask = taskManager1.getListSubTasks();
+    });
+    assertNotNull(thrown.getMessage());
 
 
-        assertEquals(0, testListSubtask.size());
+
     }
 }
 

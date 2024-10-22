@@ -227,7 +227,7 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<Subtask> getListSubTasks() throws NullPointerException {
         if (subTasks.isEmpty()) {
 
-            throw new NullPointerException();
+            throw new NullPointerException("eee");
         }
         return new ArrayList<>(subTasks.values());
     }

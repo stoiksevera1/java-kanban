@@ -308,11 +308,11 @@ public class HttpTaskManagerTasksTest {
 
         manager.addTask(task1);
         manager.addTask(task2);
-        String taskJson = gson.toJson(manager.getListTasks());
+        String taskJson = gson.toJson(manager.getListEpics());
 
         // создаём HTTP-клиент и запрос
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/epic");
+        URI url = URI.create("http://localhost:8080/epics");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(url)
@@ -341,7 +341,7 @@ public class HttpTaskManagerTasksTest {
 
         // создаём HTTP-клиент и запрос
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks/1");
+        URI url = URI.create("http://localhost:8080/epics/1");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(url)
