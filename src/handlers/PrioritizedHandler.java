@@ -3,10 +3,7 @@ package handlers;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import manager.ManagerSaveException;
-
 import java.io.IOException;
-import java.io.InputStream;
-
 import static handlers.HttpTaskServer.mg;
 
 public class PrioritizedHandler extends BaseHttpHandler {
