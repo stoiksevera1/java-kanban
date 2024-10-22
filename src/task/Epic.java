@@ -1,20 +1,32 @@
 package task;
 
 
+import com.google.gson.annotations.Expose;
+
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subIds = new ArrayList<>();
-    private LocalDateTime endTime;
+
+
+
+
+
+     private ArrayList<Integer> subIds = new ArrayList<>();
+       private LocalDateTime endTime;
+
+
+
 
     public Epic(String name, String description) {
         super(name,
                 description,
-                Status.NEW);
+                  Status.NEW);
 
 
     }
+
 
     public void delSubId(Integer id) {
         subIds.remove(id);

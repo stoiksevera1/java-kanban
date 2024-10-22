@@ -6,6 +6,7 @@ import task.Task;
 
 
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
     void addTask(Task task);
@@ -49,4 +50,6 @@ public interface TaskManager {
     List<Task> getHistory();
 
     public void removeHistoryById(Integer id);
+
+    public Set<Task> getPrioritizedTasks();
 }

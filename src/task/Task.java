@@ -8,8 +8,8 @@ public class Task {
     private String description;
     private int id;
     private Status status;
-    private Duration duration;
-    private LocalDateTime startTime;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
     public Task(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
         setDescription(description);

@@ -1,5 +1,9 @@
 package manager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import handlers.DurationTimeAdapter;
+import handlers.LocalDateTimeAdapter;
 import org.junit.jupiter.api.AfterEach;
 
 import org.junit.jupiter.api.Test;
@@ -97,11 +101,11 @@ abstract class TaskManagerTest {
         taskManager1.addTask(epic2);
         taskManager1.addTask(task1);
         taskManager1.addTask(task2);
-
         taskManager1.addTask(subTask1);
         taskManager1.addTask(subTask2);
         taskManager1.addTask(subtask3);
         taskManager1.addTask(subtask4);
+
     }
 
     @Test
