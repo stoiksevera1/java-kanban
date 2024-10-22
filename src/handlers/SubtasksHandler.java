@@ -42,7 +42,7 @@ public class SubtasksHandler extends BaseHttpHandler {
                             mg.addTask(gson.fromJson(new String(requestBody.readAllBytes(), StandardCharsets.UTF_8),
                                     Subtask.class));
                             sendText(h, h.getResponseBody().toString());
-break;
+                            break;
                         } else {
                             if (getId(p[2]).isEmpty()) {
                                 sendNotFound(h, "Некоректный ввод id");

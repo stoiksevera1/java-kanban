@@ -18,9 +18,7 @@ public class HistoryHandler extends BaseHttpHandler {
     public void handle(HttpExchange h) throws IOException {
         try {
             try {
-
                 String[] p = h.getRequestURI().getPath().split("/");
-
                 if (h.getRequestMethod().equals("GET") && (p.length < 3)) {
                     sendText(h, gson.toJson(mg.getHistory()));
                 } else {
