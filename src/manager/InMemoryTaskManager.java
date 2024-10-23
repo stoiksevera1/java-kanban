@@ -382,6 +382,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return taskSortStartTime;
     }
+
     public int getNextId() {
         return nextId;
     }
