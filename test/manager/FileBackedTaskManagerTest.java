@@ -13,7 +13,8 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class FileBackedTaskManagerTest extends TaskManagerTest {
@@ -36,14 +37,16 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
         Subtask subTask1 = new Subtask("долго спать", "проспать как можно дольше", Status.DONE, 1, Duration.ofMinutes(15), LocalDateTime.of(2024, 11, 20, 12, 50));
         Subtask subTask2 = new Subtask("очень долго спать", "спать в два раза дольше чем в первый раз", Status.DONE, 1, Duration.ofMinutes(50), LocalDateTime.of(2024, 11, 27, 12, 50));
         Subtask subtask3 = new Subtask("Много есть", "получить ачивку обжорство", Status.IN_PROGRESS, 2, Duration.ofMinutes(10), LocalDateTime.of(2024, 11, 22, 12, 50));
+        Throwable thrown = assertThrows(ManagerSaveException.class, () -> {
+            manager1.addTask(epic1);
+            manager1.addTask(epic2);
+            manager1.addTask(task1);
+            manager1.addTask(task2);
 
-        manager1.addTask(epic1);
-        manager1.addTask(epic2);
-        manager1.addTask(task1);
-        manager1.addTask(task2);
-
-        manager1.addTask(subTask1);
-        manager1.addTask(subTask2);
-        manager1.addTask(subtask3);
+            manager1.addTask(subTask1);
+            manager1.addTask(subTask2);
+            manager1.addTask(subtask3);
+        });
+        assertNotNull(thrown.getMessage());
     }
 }

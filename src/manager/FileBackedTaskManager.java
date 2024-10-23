@@ -27,25 +27,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         FileBackedTaskManager loadManager = new FileBackedTaskManager();
         try {
             String[] split = (Files.readString(file.toPath(), StandardCharsets.UTF_8).split("\n"));
+           if (split.length > 2) {
+               loadManager.taskSortStartTime = Arrays.stream(split).skip(1)
+                       .map(loadManager::fromString)
+                       .peek(task -> {
+                                   if (task instanceof Epic) {
+                                       loadManager.epics.put(task.getId(), (Epic) task);
+                                   } else if (task instanceof Subtask) {
+                                       loadManager.subTasks.put(task.getId(), (Subtask) task);
+                                   } else {
+                                       loadManager.tasks.put(task.getId(), task);
+                                   }
+                               }
+                       )
+                       .filter(task -> !(task instanceof Epic))
+                       .filter(task -> task.getStartTime() != null)
+                       .sorted(Comparator.comparing(Task::getStartTime))
+                       .collect(Collectors.toCollection(LinkedHashSet::new));
 
-            loadManager.taskSortStartTime = Arrays.stream(split).skip(1)
-                    .map(loadManager::fromString)
-                    .peek(task -> {
-                                if (task instanceof Epic) {
-                                    loadManager.epics.put(task.getId(), (Epic) task);
-                                } else if (task instanceof Subtask) {
-                                    loadManager.subTasks.put(task.getId(), (Subtask) task);
-                                } else {
-                                    loadManager.tasks.put(task.getId(), task);
-                                }
-                            }
-                    )
-                    .filter(task -> !(task instanceof Epic))
-                    .filter(task -> task.getStartTime() != null)
-                    .sorted(Comparator.comparing(Task::getStartTime))
-                    .collect(Collectors.toCollection(LinkedHashSet::new));
+           }
             if (split.length > 0) loadManager.nextId = split.length;
-
             return loadManager;
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка чтения файла");
@@ -182,16 +183,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String[] split = value.split(",");
 
         if (split[1].equals(Tasks.TASK.name())) {
+            Task taskFromString;
             if (split.length <= 5) {
-                Task taskFromString = new Task(split[2], split[4], Status.valueOf(split[3]));
-                taskFromString.setId(parseInt(split[0]));
-                return taskFromString;
+                taskFromString = new Task(split[2], split[4], Status.valueOf(split[3]));
             } else {
-                Task taskFromString = new Task(split[2], split[4], Status.valueOf(split[3]),
+                taskFromString = new Task(split[2], split[4], Status.valueOf(split[3]),
                         Duration.ofMinutes(Long.parseLong(split[5])), LocalDateTime.parse(split[6]));
-                taskFromString.setId(parseInt(split[0]));
-                return taskFromString;
             }
+            taskFromString.setId(parseInt(split[0]));
+            return taskFromString;
 
 
         } else if (split[1].equals(Tasks.EPIC.name())) {

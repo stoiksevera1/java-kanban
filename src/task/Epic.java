@@ -5,8 +5,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
+
+
     private ArrayList<Integer> subIds = new ArrayList<>();
     private LocalDateTime endTime;
+
 
     public Epic(String name, String description) {
         super(name,
@@ -15,6 +18,7 @@ public class Epic extends Task {
 
 
     }
+
 
     public void delSubId(Integer id) {
         subIds.remove(id);

@@ -11,13 +11,15 @@ import java.util.stream.Collectors;
 
 
 public class InMemoryTaskManager implements TaskManager {
+
+
     protected int nextId = 1;
     protected Map<Integer, Task> tasks = new HashMap<>();
     protected Map<Integer, Epic> epics = new HashMap<>();
     protected Map<Integer, Subtask> subTasks = new HashMap<>();
 
     public HistoryManager history = new InMemoryHistoryManager();
-    protected Set<Task> taskSortStartTime = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    public Set<Task> taskSortStartTime = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
     @Override
     public void addTask(Task task) {
@@ -31,7 +33,8 @@ public class InMemoryTaskManager implements TaskManager {
                 taskSortStartTime.add(task);
             }
         } else {
-            System.out.println("Задача не может быть добавлена. Время выполнения пересекается с ранее созданой задачей");
+
+            throw new ManagerSaveException("Задача не может быть добавлена. Время выполнения пересекается с ранее созданой задачей");
         }
     }
 
@@ -54,9 +57,11 @@ public class InMemoryTaskManager implements TaskManager {
 
             } else {
                 System.out.println("Эпика с таким ID не существует подзадача не может быть добавлена.");
+                throw new ManagerSaveException("Эпика с таким ID не существует подзадача не может быть добавлена.");
             }
         } else {
             System.out.println("Задача не может быть добавлена. Время выполнения пересекается с ранее созданой задачей");
+            throw new ManagerSaveException("Задача не может быть добавлена. Время выполнения пересекается с ранее созданой задачей");
         }
 
     }
@@ -155,9 +160,11 @@ public class InMemoryTaskManager implements TaskManager {
                 }
             } else {
                 System.out.println("Задача не может быть добавлена. Время выполнения пересекается с ранее созданой задачей");
+                throw new ManagerSaveException("Задача не может быть добавлена. Время выполнения пересекается с ранее созданой задачей");
             }
         } else {
             System.out.println("Задачи с таким ID нет");
+            throw new NullPointerException();
         }
     }
 
@@ -177,9 +184,11 @@ public class InMemoryTaskManager implements TaskManager {
                 synTimeEpic(epics.get(subtask.getEpicId()));
             } else {
                 System.out.println("Задача не может быть добавлена. Время выполнения пересекается с ранее созданой задачей");
+                throw new ManagerSaveException("Задача не может быть добавлена. Время выполнения пересекается с ранее созданой задачей");
             }
         } else {
             System.out.println("Задачи с таким ID нет");
+            throw new NullPointerException();
         }
     }
 
@@ -188,24 +197,43 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epic.getId())) {
             epics.get(epic.getId()).setName(epic.getName());
             epics.get(epic.getId()).setDescription(epic.getDescription());
+        } else {
+            System.out.println("Эпика  с таким ID нет");
+            throw new NullPointerException();
         }
     }
 
     @Override
-    public ArrayList<Task> getListTasks() {
+    public ArrayList<Task> getListTasks() throws NullPointerException {
+        if (tasks.isEmpty()) {
+
+            throw new NullPointerException();
+        }
+
         return new ArrayList<>(tasks.values());
+
+
     }
 
 
     @Override
-    public ArrayList<Epic> getListEpics() {
+    public ArrayList<Epic> getListEpics() throws NullPointerException {
+        if (epics.isEmpty()) {
+
+            throw new NullPointerException();
+        }
+
         return new ArrayList<>(epics.values());
 
     }
 
 
     @Override
-    public ArrayList<Subtask> getListSubTasks() {
+    public ArrayList<Subtask> getListSubTasks() throws NullPointerException {
+        if (subTasks.isEmpty()) {
+
+            throw new NullPointerException("eee");
+        }
         return new ArrayList<>(subTasks.values());
     }
 
@@ -217,7 +245,7 @@ public class InMemoryTaskManager implements TaskManager {
                     .map(subId -> subTasks.get(subId))
                     .collect(Collectors.toCollection(ArrayList::new));
         }
-        return null;
+        throw new NullPointerException();
     }
 
 
@@ -258,35 +286,33 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTask(Integer id) {
+    public Task getTask(Integer id) throws NullPointerException {
         if (tasks.containsKey(id)) {
             history.add(tasks.get(id));
             return tasks.get(id);
         } else {
-            System.out.println("Такой ID не найден!");
-            return null;
+            throw new NullPointerException();
         }
     }
 
     @Override
-    public Epic getEpic(Integer id) {
+    public Epic getEpic(Integer id) throws NullPointerException {
         if (epics.containsKey(id)) {
             history.add(epics.get(id));
             return epics.get(id);
         } else {
-            System.out.println("Такой ID не найден!");
-            return null;
+            throw new NullPointerException();
         }
     }
 
     @Override
-    public Subtask getSubTask(Integer id) {
+    public Subtask getSubTask(Integer id) throws NullPointerException {
         if (subTasks.containsKey(id)) {
             history.add(subTasks.get(id));
             return subTasks.get(id);
         } else {
-            System.out.println("Такой ID не найден!");
-            return null;
+
+            throw new NullPointerException();
         }
     }
 
@@ -299,21 +325,25 @@ public class InMemoryTaskManager implements TaskManager {
 
         } else {
             System.out.println("Такой ID не найден!");
+            throw new NullPointerException();
         }
     }
 
     @Override
     public void delEpicById(Integer id) {
         if (epics.containsKey(id)) {
-            for (Integer subId : epics.get(id).getSubIds()) {
-                history.remove(subId);
-                taskSortStartTime.remove(subTasks.get(subId));
-                subTasks.remove(subId);
+            if (!subTasks.isEmpty()) {
+                for (Integer subId : epics.get(id).getSubIds()) {
+                    history.remove(subId);
+                    taskSortStartTime.remove(subTasks.get(subId));
+                    subTasks.remove(subId);
+                }
             }
             history.remove(id);
             epics.remove(id);
         } else {
             System.out.println("Такой ID не найден!");
+            throw new NullPointerException();
         }
     }
 
@@ -330,21 +360,32 @@ public class InMemoryTaskManager implements TaskManager {
 
         } else {
             System.out.println("Такой ID не найден!");
+            throw new NullPointerException();
         }
     }
 
     public List<Task> getHistory() {
+        if (history.getHistory().isEmpty()) {
+            throw new NullPointerException();
+        }
         return history.getHistory();
     }
+
 
     public void removeHistoryById(Integer id) {
         history.remove(id);
     }
 
     public Set<Task> getPrioritizedTasks() {
+        if (taskSortStartTime.isEmpty()) {
+            throw new NullPointerException();
+        }
         return taskSortStartTime;
     }
 
+    public int getNextId() {
+        return nextId;
+    }
 
 }
 
