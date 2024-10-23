@@ -48,19 +48,24 @@ public class EpicHandler extends BaseHttpHandler {
                         }
                         break;
                     case "POST":
+                        JsonElement jsonElement = JsonParser.parseString(new String(requestBody.readAllBytes(), StandardCharsets.UTF_8));
+                        JsonObject jsonObject = jsonElement.getAsJsonObject();
+                        Epic epic = new Epic(jsonObject.get("name").getAsString(),
+                                jsonObject.get("description").getAsString());
                         if (p.length < 3) {
-                            JsonElement jsonElement = JsonParser.parseString(new String(requestBody.readAllBytes(), StandardCharsets.UTF_8));
-                            JsonObject jsonObject = jsonElement.getAsJsonObject();
-                            Epic epic = new Epic(jsonObject.get("name").getAsString(),
-                                    jsonObject.get("description").getAsString());
+
                             mg.addTask(epic);
 
-                            sendText(h, h.getResponseBody().toString());
-
+                            sendText(h, String.valueOf((mg.getNextId() - 1)));
                         } else {
-                            sendNotFound(h, "Некоректный ввод");
-                            break;
+                            if (getId(p[2]).isEmpty()) {
+                                sendNotFound(h, "Некоректный ввод id");
+                                break;
+                            }
 
+                            epic.setId(parseInt(p[2]));
+                            mg.update(epic);
+                            sendText(h, h.getResponseBody().toString());
                         }
                         break;
                     case "DELETE":

@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 
 public class InMemoryTaskManager implements TaskManager {
+
+
     protected int nextId = 1;
     protected Map<Integer, Task> tasks = new HashMap<>();
     protected Map<Integer, Epic> epics = new HashMap<>();
@@ -195,6 +197,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epic.getId())) {
             epics.get(epic.getId()).setName(epic.getName());
             epics.get(epic.getId()).setDescription(epic.getDescription());
+        } else {
+            System.out.println("Эпика  с таким ID нет");
+            throw new NullPointerException();
         }
     }
 
@@ -377,7 +382,9 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return taskSortStartTime;
     }
-
+    public int getNextId() {
+        return nextId;
+    }
 
 }
 

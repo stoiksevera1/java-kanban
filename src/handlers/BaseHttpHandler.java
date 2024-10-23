@@ -21,17 +21,25 @@ public class BaseHttpHandler implements HttpHandler {
 
     protected void sendText(HttpExchange h, String text) throws IOException {
 
-        if (h.getRequestMethod().equals("POST") || h.getRequestMethod().equals("DELETE")) {
+        if (h.getRequestMethod().equals("POST")) {
+            h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+            try (OutputStream os = h.getResponseBody()) {
+                h.sendResponseHeaders(201, 0);
+                os.write(text.getBytes(StandardCharsets.UTF_8));
+            }
+            h.close();
+
+        } else if (h.getRequestMethod().equals("DELETE")) {
             h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
             h.sendResponseHeaders(201, 0);
             h.close();
-            return;
-        }
-        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        try (OutputStream os = h.getResponseBody()) {
-            h.sendResponseHeaders(200, 0);
-            os.write(text.getBytes(StandardCharsets.UTF_8));
-            h.close();
+        } else {
+            h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+            try (OutputStream os = h.getResponseBody()) {
+                h.sendResponseHeaders(200, 0);
+                os.write(text.getBytes(StandardCharsets.UTF_8));
+                h.close();
+            }
         }
 
 

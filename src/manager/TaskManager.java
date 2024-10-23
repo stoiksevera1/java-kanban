@@ -52,4 +52,6 @@ public interface TaskManager {
     public void removeHistoryById(Integer id);
 
     public Set<Task> getPrioritizedTasks();
+
+    public int getNextId();
 }

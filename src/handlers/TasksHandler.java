@@ -47,7 +47,7 @@ public class TasksHandler extends BaseHttpHandler {
 
                             mg.addTask(gson.fromJson(new String(requestBody.readAllBytes(), StandardCharsets.UTF_8),
                                     Task.class));
-                            sendText(h, h.getResponseBody().toString());
+                            sendText(h, String.valueOf((mg.getNextId() - 1)));
 
                         } else {
                             if (getId(p[2]).isEmpty()) {

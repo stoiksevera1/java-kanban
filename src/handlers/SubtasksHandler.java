@@ -41,7 +41,7 @@ public class SubtasksHandler extends BaseHttpHandler {
                         if (p.length < 3) {
                             mg.addTask(gson.fromJson(new String(requestBody.readAllBytes(), StandardCharsets.UTF_8),
                                     Subtask.class));
-                            sendText(h, h.getResponseBody().toString());
+                            sendText(h, String.valueOf((mg.getNextId() - 1)));
                             break;
                         } else {
                             if (getId(p[2]).isEmpty()) {
